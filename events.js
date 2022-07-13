@@ -117,3 +117,36 @@ myEE.on('thisShit',()=>{
 
 })
 console.log(myEE.eventNames())
+
+// emitter.getMaxListeners
+// gets and sets maxListeners for EE instance
+myEE.setMaxListeners(15)
+console.log(myEE.getMaxListeners())
+
+// emiiter.listenerCount()
+// returns number of eventListeners listeneing to an event
+console.log(myEE.listenerCount('thisShit'))
+
+// turn of  emitter with emitter.off()
+// emitter.removeAllListeners('eventName'). this to removeAllkistener
+
+// emmitter.removeListener('EventName',cb)
+const newEE = new EventEmitter()
+
+newEE.on('fire',()=>{
+    console.log('fire')
+})
+newEE.removeListener('fire',()=>{
+    console.log('out')
+})
+
+newEE.emit('fire')
+
+// emitter.rawListeners('eventNAme')
+// returns an array of listeners for an event
+console.log(newEE.rawListeners('fire')[0]())
+
+// getEventListener
+// this returns an array of listeners associated with an event
+
+const ees = events.getEventListeners(newEE,'fire')
