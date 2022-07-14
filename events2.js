@@ -39,3 +39,13 @@ const run = async function(){
       console.log('error happened', err);
     }
 }
+
+
+
+
+// set max listeners
+// 
+const EE2 = new EventEmitter()
+events.setMaxListeners(5,EE2)
+
+console.log(EE2.getMaxListeners())
