@@ -136,5 +136,86 @@ let err1 = new Error({})
 
 // //////////
 // Error.captureStackTrace(targetObj,f(n))
+// creates .stack() property on the object to trace errror 
 let obj1 = {}
-console.log(Error.captureStackTrace(obj1))
+Error.captureStackTrace(this,err)
+// console.log(err.stack)
+
+
+// Errors.stackTraceLimit.
+// this specifies the number of stack frames collected by a stack trace
+// this value can be updated to any positive js interger
+Error.stackTraceLimit = 15
+console.log(Error.stackTraceLimit)
+
+//////////////
+// when error are emitted they  need to be id. with error.code, devs can classify and identify certain errors by the error.code ths have
+const anErr = new Error('find the errCode')
+anErr.code
+
+//////////////
+// error messages are emitted with the error. the messasge is a detail for the error
+console.log(anErr.message)
+
+//////////////
+// use error.stack to log the stack frames. the lines that start with 'at'. this shows where in our code the error was generated
+// console.log(anErr.stack)
+
+//////////////
+// range error. this error occurs when an argument provided is not in the range of accepted values
+// require('net').connect(-1)
+
+////////////
+// reference error is raised when a non existent variable or function is called
+// console.log(notExisting)
+
+//////////
+// syntaxErrors are raised when invalid js syntax is used
+// for(let i=0,i<5,i++){}
+
+
+///////
+// systemErrors may occur if the application violates the OS constraint s
+// like reading files that do not exist 
+const files = require('fs')
+// files.unlinkSync('./nonExisting path')
+
+///////////
+// error.address#<string>
+{/* If present, error.address is a string describing the address to which a network connection failed. */}
+
+//////////
+// error.dest, path destination when reporting fs err
+
+////////////
+//  error.errno: this is a negative number use to describe the error.
+// get more info on error codes
+// util.getSystemErrorName(error.errno)
+
+// /////////
+// error.info
+// this is an object that stores details about the error condition
+
+/////////////
+// error.path this value holds the invalid path. for fs errors
+
+///////////
+// error.port 
+// this specifies that the given port is invalid.
+
+/////////
+// /error.sysCall
+// this is a string that specifies the system call made
+
+///////////////////////////////////
+// common system errors
+// EACCES(permission denied), accessing restricted files with out permission. Error Access
+
+// EADRINUSE, failed to bind server to port because port is in use. Error Address in use
+
+// ECONNREFUSED, erro from failed connection, because endPoint refused connectivity. Error connection refused
+
+// ECONNRESET, error. connection was forcly closed by peer
+
+// EEXIST (File exists): An existing file was the target of an operation that required that the target not exist.
+

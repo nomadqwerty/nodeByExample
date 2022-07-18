@@ -49,3 +49,5 @@ const EE2 = new EventEmitter()
 events.setMaxListeners(5,EE2)
 
 console.log(EE2.getMaxListeners())
+
+// Event Target , Event Api
