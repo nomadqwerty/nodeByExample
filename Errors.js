@@ -219,3 +219,21 @@ const files = require('fs')
 
 // EEXIST (File exists): An existing file was the target of an operation that required that the target not exist.
 
+// EISDIR - file operation but on a directory will raise an error. Error is Directory
+
+
+////////////////////
+// class:TypeError
+// this type of error occurs when a wrong type of argument is passed into a function that accepts a different type of argument
+require('url').parse(()=>{})
+
+
+////////
+// exceptions vs errors
+// exceptions are a result of invalid operations
+// exceptions are not always errors. but the do end the node process. this is because exceptions are propagated up with throw(). throw() is what ends the process
+
+// nodejs error code
+
+/// abort_err
+// process.abort()

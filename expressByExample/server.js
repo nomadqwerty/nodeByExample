@@ -44,9 +44,17 @@ app.get('/',(req,res,next)=>{
     next()
 }])
 
-// response methods.\
-// the res methods are use to return data back to the client. and to end the req.res cycle
-// res.download
+// app.route() this function helps use create chainable route handler. if the endpioint requires diff methods.
+app.route('/chain').get((req,res)=>{res.end()}).post((req,res)=>{res.end()})
+
+
+// express.Router() is class used for mounting middlewares. it is also equip with a route() method. so it can perform routing operations
+
+
+
+
+
+
 
 app.listen(3000,()=>{
     console.log('server on')
