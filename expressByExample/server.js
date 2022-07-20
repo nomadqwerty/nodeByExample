@@ -1,3 +1,4 @@
+const { application, request } = require('express')
 const express = require('express')
 
 const app = express()
@@ -29,14 +30,12 @@ app.all('/allHTTPMETHODS',()=>{
 app.get('/',(req,res,next)=>{
     //   do somthn
     res.end()
-    next()
 },(req,res,next)=>{
     //   do andathn
-    res.end()
+    console.log('here')
     next()
 },[(req,res,next)=>{
     //   array of handler
-    res.end()
     next()
 },(req,res,next)=>{
     //   array 0f handler
@@ -50,7 +49,55 @@ app.route('/chain').get((req,res)=>{res.end()}).post((req,res)=>{res.end()})
 
 // express.Router() is class used for mounting middlewares. it is also equip with a route() method. so it can perform routing operations
 
+let router = express.Router()
+router.use((req,res,next)=>{
+    res.end()
+    next()
+})
 
+router.get('/',(req,res,next)=>{
+    console.log('here')
+    res.end()
+    next()
+}).post('/',(req,res,next)=>{
+    res.end()
+    next()
+})
+
+///////////////////////
+// creating middlewares.
+// middlewares are basically functions that sit between the sever client request response cycle.
+// ie: client requests =======> middleware()=======> server recieves request
+//     client recieves response <======== middleware() <======== server responds
+
+// middleware capabilites
+// execute any code,
+// manipulate the request and response objects
+// ends the req res cycle
+// call the next() fucntion
+
+// the next() is important because when called it executes the next middleware function
+// middleware in practice
+let middleware1 = (req,res,next)=>{
+    console.log('Logged in bro')
+    next()
+}
+let middleware2 = (req,res,next)=>{
+    req.requestTime = Date.now().toLocaleString()
+    console.log(req.requestTime)
+    next()
+}
+let middleware3 = (req,res,next)=>{}
+
+
+
+// we can mount middleware with the app.use() method// app.use(thisMiddleWare())
+// middles functions are called synchronously. the first middleware func mounted will get called first
+app.use(middleware1)
+
+app.get('/middleware', middleware2,(req,res)=>{
+    res.end()
+})
 
 
 

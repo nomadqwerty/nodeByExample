@@ -225,7 +225,7 @@ const files = require('fs')
 ////////////////////
 // class:TypeError
 // this type of error occurs when a wrong type of argument is passed into a function that accepts a different type of argument
-require('url').parse(()=>{})
+require('url').parse('string')
 
 
 ////////
