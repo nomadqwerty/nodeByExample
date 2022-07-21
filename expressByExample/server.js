@@ -83,7 +83,7 @@ let middleware1 = (req,res,next)=>{
     next()
 }
 let middleware2 = (req,res,next)=>{
-    req.requestTime = Date.now().toLocaleString()
+    req.requestTime = Date.now()
     console.log(req.requestTime)
     next()
 }
@@ -93,15 +93,47 @@ let middleware3 = (req,res,next)=>{}
 
 // we can mount middleware with the app.use() method// app.use(thisMiddleWare())
 // middles functions are called synchronously. the first middleware func mounted will get called first
+// note when mounting middle wares do not call them, they callbacks and will be called by express when it is needed
 app.use(middleware1)
 
+// .use() can be mounted for certain paths but for all methods
+app.use('/paths',middleware1)
+// also multi midlewares can be mounted
+app.use('/path',middleware1,middleware2,middleware3)
+
+// if a middleware is route specific it can be mounted on the router too like so:
+// app.get('/url,middleware())
 app.get('/middleware', middleware2,(req,res)=>{
     res.end()
 })
 
+// externallyValidateCookie()
 
+// using middleware()
+// types of middleware in express.
+// 1. app level middleware
+// application middleware are bound to the express app. 
+// by using app.use() or app.get()'and other http methods put,patch,post,delete.'
+app.use(middleware1)
 
+// or
+// app.get('/url,middleware())
+// middleware mounted on the http methods, are specific to the methods. and the routes defined on them
+app.get('/middleware', middleware2,(req,res)=>{
+    res.end()
+})
 
+// to pass task of to the next middlewar func use next(). to byPass all middleware in the middleware stack use next('route').this ends the cycle. 
+app.get('/route',(req,res,next)=>{
+    console.log('bypassing rest')
+    next('route')
+},(req,res,next)=>{
+    console.log('was i bypassed?')
+    next()
+},(req,res,next)=>{
+    console.log('cycle ended')
+    res.end()
+})
 
 app.listen(3000,()=>{
     console.log('server on')

@@ -5,3 +5,11 @@
 // the global console methods arent consistently synchronous like in the web browser. and it is not consistently async like other streams in node
 
 console.error(new Error('error occured'))
+
+// the Console class is used to make simple logger with configurable out put streams.
+// import Console class
+const {Console} = console
+// console is a global module so require() is not required(lol)
+
+// create new instance of Console.
+
