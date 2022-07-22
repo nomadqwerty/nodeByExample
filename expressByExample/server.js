@@ -1,5 +1,6 @@
 const { application, request } = require('express')
 const express = require('express')
+const fs = require('fs')
 
 const app = express()
 
@@ -79,7 +80,7 @@ router.get('/',(req,res,next)=>{
 // the next() is important because when called it executes the next middleware function
 // middleware in practice
 let middleware1 = (req,res,next)=>{
-    console.log('Logged in bro')
+    // console.log('Logged in bro')
     next()
 }
 let middleware2 = (req,res,next)=>{
@@ -112,7 +113,9 @@ app.get('/middleware', middleware2,(req,res)=>{
 // using middleware()
 // types of middleware in express.
 // 1. app level middleware
-// application middleware are bound to the express app. 
+// application middleware are bound to the express app instance
+// this middleware are mainly required by the app. on the topLevel.
+// like middleware for parsing req,cookies,xss protection etc
 // by using app.use() or app.get()'and other http methods put,patch,post,delete.'
 app.use(middleware1)
 
@@ -134,6 +137,49 @@ app.get('/route',(req,res,next)=>{
     console.log('cycle ended')
     res.end()
 })
+
+
+////////////////////////////
+// router level middleware 
+// this works just like app level middle
+const a_router = express.Router()
+
+a_router.use(middleware1)
+a_router.use('/path',middleware1)
+a_router.get('/path',middleware1,(req,res)=>{
+    res.end()
+})
+
+// use next('route') to skip. jst like in app level
+
+// error handling middleware. 
+// error handling middlerware works like any other middle but it accepts one more param. which is the error.
+
+const errorMid = (err,req,res,next)=>{
+    console.log(err.stack)
+    res.status(500).send('try again!!!')
+}
+
+// express error handling. 
+// this refers to the express error handling mechanisms.
+// express has a default handler. 
+// catching handlers
+// sync error are hanlded by express. this errors occur in the hanlder.
+app.get('/errorTest',(req,res,next)=>{
+    throw(new Error('app error'))
+})
+
+// async error are hanlded by passing err into the next param.
+app.get('/file',(req,res,next)=>{
+    fs.readFile('/nowhere',(err,data)=>{
+        if(err) next(err)
+        else res.send(data)
+    })
+    
+})
+
+
+
 
 app.listen(3000,()=>{
     console.log('server on')
