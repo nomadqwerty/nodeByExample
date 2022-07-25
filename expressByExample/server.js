@@ -170,6 +170,7 @@ app.get('/errorTest',(req,res,next)=>{
 })
 
 // async error are hanlded by passing err into the next param.
+// by passing a val into next() besides 'route', is interpreted as an error.
 app.get('/file',(req,res,next)=>{
     fs.readFile('/nowhere',(err,data)=>{
         if(err) next(err)
@@ -179,7 +180,28 @@ app.get('/file',(req,res,next)=>{
 })
 
 
+//////////////
+// default error handling
+// if error is sent to next() with outbeign handled by constum handler , express will handle it and return a stackTrace back to client in dev mode, but in prod mode
+// express crafts the response obj as
+// 1. res.statuscode:500,
+// 2. res.statusMessage:
+// if next is called with an error, but u are already streaming data to tghe client, express closes the connection and fails the request.
 
+////////
+// how to write error handlers. then middlerware acts jxt like any othe r middleware. but instead of 3 args its 4 including the err arg
+
+const errMid = (err,req,res,next)=>{
+    console.log(err.stack,'errt')
+    next(err)
+    res.status(500).send('error encountered')
+}
+app.get('/errorMid',errMid)
+
+
+/////////////////////////////////////
+// debugging express apps
+// express the nodejs debug api, to nlog info about route matches, middlewares,appmode, req res cycle
 
 app.listen(3000,()=>{
     console.log('server on')
