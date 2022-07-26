@@ -166,3 +166,102 @@ const obj = {a:'s'}
 
 ////////////////////////
 // .from(obj)// 25.7
+const obj2 = new Object([1,2,3])
+const objBuf = Buffer.from(obj2,'ascii',10)
+console.log(objBuf)
+console.log(fromm2.toString('latin1'))
+
+
+////////////////////
+// .isBuffer()
+// used to check if object is a buffer
+// returns a boolean depending on the result
+console.log(Buffer.isBuffer(objBuf))
+
+//// .isEncoding()
+// checks if an encoding is supported by the buffer instances
+console.log(Buffer.isEncoding('ascii'))
+
+
+//////buff[], the index helps find a byte at a given index. works like an array, cant find indexes less than 0 or more than the buffer length
+
+const strBB = Buffer.from('Nodejs')
+
+console.log(strBB[1])
+
+////////////////////////
+// buf.compare()
+// arg1: buffer,array intsance
+// compares a buffer object to another buffer,typeArray etc
+
+const com1 = Buffer.from([1,2,3,4])
+const com2 = Buffer.from([1,2,3,4])
+// returns 0 if the same or -1 if not
+console.log(com1.compare(com2))
+
+// additional args, arg2:targetStart, ar3:targetEnd, ar4:sourceStart,arg5:sourceEnd
+
+
+
+////////////////////////
+// buf.copy
+// arg1: buffer,array intsance
+// copies data in a buffer object to another buffer,typeArray etc
+
+const cop1 = Buffer.from([1,2,3,4])
+const cop2 = Buffer.from([])
+// returns 0 if the same or -1 if not
+cop1.copy(cop2)
+console.log(cop2)
+// additional args, arg2:targetStart, arg3:sourceStart,arg4:sourceEnd
+
+
+/////////////
+// buf.entries()
+// returns an iterator of index:bytes
+// like object.entries
+for(let pair of cop1.entries()){
+    console.log(pair)
+}
+
+////////////////////////
+// buf.equals(), returns a boolean is bytes in both buffer are identical
+const buf1 = Buffer.from('ABC');
+const buf2 = Buffer.from('414243', 'hex');
+const buf3 = Buffer.from('ABCD');
+
+console.log(buf1.equals(buf2));
+console.log(buf2.toString())
+
+const buf4 = Buffer.from(buf2)
+console.log(buf1.equals(buf4))
+
+//////buf.fill()
+// fills  a given buffer with specified content. 
+buf4.fill('h')
+console.log(buf4.toString())
+
+
+
+/////buf.includes checks if a buffer contains certain characters
+// returns bool
+console.log(buf1.includes('A'))
+
+// buff.indexOf() returns the index of the character specified. if in buffer
+console.log(buf1.indexOf('A'))
+
+/// buff.keys iterator, returns keys of indexes in buff
+for(let key of cop1.keys()){
+    console.log(key)
+}
+
+// buff.lastIndexOf(), returns the index of the last occurance in a buffer
+
+console.log(buf1.lastIndexOf('A'))
+
+// buf.length()
+// return len of buffer
+console.log(buf4.length)
+
+
+////buf.readBigInt64BE()

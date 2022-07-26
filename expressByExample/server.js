@@ -203,6 +203,8 @@ app.get('/errorMid',errMid)
 // debugging express apps
 // express the nodejs debug api, to nlog info about route matches, middlewares,appmode, req res cycle
 
+// to see the internal logs use DEBUG=express:* node file.js
+
 app.listen(3000,()=>{
     console.log('server on')
 })
