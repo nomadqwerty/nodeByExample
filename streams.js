@@ -2,7 +2,7 @@
 
 // streams can be readable and writeable. all streams are intsances of the eventEmitter class.
 
-const stream = require('stream')
+const {Writable,stream} = require('stream')
 // we the api we can create ne intances of stream.
 // types of streams. write,read,duplex,transform streams.
 
@@ -32,6 +32,7 @@ const stream = require('stream')
 /// API for stream consumers
 // this an implementation req stream.
 const http = require('http')
+const { write } = require('fs')
 
 const server = http.createServer((req,res)=>{
     let incomingData = ''
@@ -57,4 +58,64 @@ const server = http.createServer((req,res)=>{
     })
 }).listen(3000,'localhost')
 
-// writable.
+// writable. streams like res expose methods like write() and end().
+// its used to write data to stream.
+
+// both read and write are instances of eventemitter class. this makes it possible to communicate to the app.
+
+
+/////////////////////////////////////////
+// writable streams. 
+// this streams are used to write data to a destination.
+// examples are, http req on client and http res on server,fswriteStream,zlib etc.
+
+// all writable streams are instances of Writable class.
+
+// class: stream.Writable. has some event will be emitted when certain operations are performed.
+
+// Event:'close'
+// the close event is emitted when the stream is closed and no more operation will be performed by the stream.
+
+// event:'drain'
+// the drain event is emmitted .write(data) method returns false. this is emiited when it is okY TO resume writing data.
+
+// event:'error', this is emitted when an error occurs while writing data to the stream. this will close the stream
+
+// event:'finish', this is emitted when the stream.end() method is called. and all data has been written to the destination.
+
+const Write = new Writable()
+
+// .cork method forces all written data to buffered to memory. bufffer will be flushed if .end() is called and .uncork() is called. 
+Write.cork()
+
+// .uncork method flushhed data stored in buffer. for the amunt of time .cork is called, uncork should be called. if cork is called twice so should oncork
+Write.uncork()
+
+// .destroy method, this is called to destroy the stream. it emitts an error event.
+
+Write.destroy(new Error('stream blew up'))
+
+
+// destroying a stream twice would raise an error.
+Write.destroy(new Error('stream disconnected'))
+
+Write.on('error', (err)=>{
+console.log(err.message)
+})
+
+//.destroyed returns a boolean indicating whether the stream was destroyed
+
+console.log(Write.destroyed)
+
+//.end() is called when the stream is done writing or data has be written to destination completely.
+const fs = require('fs');
+
+const wri = fs.createWriteStream('./wrtie.txt')
+wri.write('hello ')
+wri.end('nodejs')
+
+// .setDefaultEncoding(encoding) will set default encoding to what ever format was specified in arg.
+
+let writeEn = new Writable()
+
+writeEn.setDefaultEncoding('ascii')

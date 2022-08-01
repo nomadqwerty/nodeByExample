@@ -1,0 +1,17 @@
+events-1
+error-2
+buffer-3
+stream-4
+fs-5
+path/stringdecoder-6
+assert-7
+global-8
+util-9
+timers-10
+console-11
+debugger-12
+crypto-13
+internationalization-14
+modules:1-4: -15
+report-16
+tty-17
