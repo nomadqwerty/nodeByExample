@@ -119,3 +119,44 @@ wri.end('nodejs')
 let writeEn = new Writable()
 
 writeEn.setDefaultEncoding('ascii')
+
+// .wriable will return a bool indicating the stream is still active and not destroyed or errored out
+
+//.wrtableEnded 
+
+
+// Readable streams. this type of stream pulls data from a source, opposite of writable streams.
+// two modes are supported by readable streams: flow mode and pause mode.
+// flow mode, pulls data from a source and provides it to our node app.
+// pause mode, data can only be pulled when, .read() is called
+
+
+// all read streams are in paused mode initially, by calling .resume(),.pipe() or listening to the data event, we then switch to flow mode.
+
+// the reading stream can be switch back to pause by calling. .pause(), .unpipe()
+
+// note- readable streams wont generate data if the is no mechanism to consume or ignore the data.
+
+
+///////////
+// three states. the two modes are abstraction of the lowlevel internal state management that occurs when readable streams are implemented. 
+// the stream states that read streams exist in:
+// 1. readable.readableFlowing === null|| false || true
+// when its null no mechanism for consuming data is provided.
+// when its true, the data event is attached, or .pipe() is used or .resume() is called
+// when its false, the close/end event attached, .unpipe() or .pause() is called. when false data may be stored in the internal buffer.
+
+// chose one Api style. there are multiple styles for consuming streams and we devs should pick one events, class Methods and pipe(), pipe is recommended because it offers a high level of abstraction than the other two.
+
+// read stream events.
+// 'close'- this is emiited to signal that the stream/file Descriptor has closed and no more operation and events will occur
+
+// 'data'- this event is emmited when the stream is sending data to a consumer. the 'data' evnt occurs when a stream is switch into flow mode. 'data' eventlistenrs,.pipe(),.resume(),etc will switch to flow mode and emite data events.
+
+// 'end ' - this event is called when there is no more data to be read. in otherwords all readable data has been read.
+
+// 'error' - this events is signalled when an error occured while reading the data from source.
+
+// 'pause' - this is emitted when .pause() is called.
+
+// 'readable' - this event is emitted when there is new data to be read and when the stream has reached the end. if the end of the stream is reached called .read() will trigger the 'end' and return null. the readable event may sometime send data to the internal buffer.
