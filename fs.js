@@ -57,3 +57,43 @@ FH.appendFile('./wrtie.txt','add this data',(err)=>{
     }
     
 })
+
+// .chmod()
+// modifies permission on a file.
+FH.chmod('./wrtie.txt',077,(err)=>{
+    if(err)console.log(err.message)
+})
+
+// FH.chown()
+
+// file streaming. read
+FH.createReadStream('./wrtie.txt',{
+    encoding:'utf-8',
+    autoClose:true,
+    emitClose:true,
+    highWaterMark: 64*1024
+})
+
+// write stream
+FH.createWriteStream('./wrtie.txt',{
+    encoding:'utf-8',
+    autoClose:true,
+    emitClose:true,
+}).on('error',(err)=>{
+    console.log(err.message)
+})
+
+// exists- check if a file exists.
+FH.exists('./wrtie.txt',(exist)=>{
+    if(!exist){
+        console.log('file no dey my guy')
+    }else{
+        console.log('file dey here')
+    }
+})
+
+FH.stat('./wrtie.txt',err=>console.log(err))
+
+FH.futimes(0,new Date(), Date.now(),(err)=>{
+    if(err)console.log(err.message)
+})
