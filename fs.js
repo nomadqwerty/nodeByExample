@@ -97,3 +97,4 @@ FH.stat('./wrtie.txt',err=>console.log(err))
 FH.futimes(0,new Date(), Date.now(),(err)=>{
     if(err)console.log(err.message)
 })
+
