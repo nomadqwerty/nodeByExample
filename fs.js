@@ -98,3 +98,50 @@ FH.futimes(0,new Date(), Date.now(),(err)=>{
     if(err)console.log(err.message)
 })
 
+// get file stats.
+let stats = FH.lstat('./wrtie.txt',{
+    bigint:false
+},(err,data)=>{
+    // if(!err)console.log(data)
+})
+
+// create directory
+FH.mkdir('./direct',{recursive:true},(err)=>{
+    if(err)console.log(err.message)
+})
+
+//open file
+FH.open('./wrtie.txt','r',(err)=>{
+    if(!err){
+        console.log('file open')
+        FH.writeFile('./wrtie.txt','this is how to open a file',(err)=>{
+            console.log('done')
+        })
+    }
+    else{
+        console.log(err.message)
+    }
+})
+
+// open directory.
+FH.opendir('./direct',{encoding:'utf-8',bufferSize:50},(err,dir)=>{
+    console.log(dir)
+})
+
+// read dir
+FH.readdir('./bufferByExample',{encoding:'utf-8'},(err,dir)=>{
+    console.log(dir)
+})
+
+
+FH.readlink('./wrtie.txt',{encoding:'utf-8'},(err,linkStr)=>{
+    // console.log(linkStr)
+})
+
+FH.realpath('./wrtie.txt',{encoding:'utf-8'},(err,linkStr)=>{
+    console.log('pathTo:',linkStr)
+})
+
+FH.rename('./wrtie.txt','write.txt',(err)=>{
+    if(err)console.log(err.message)
+})

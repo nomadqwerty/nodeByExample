@@ -217,6 +217,7 @@ app.get('/req/:param',(req,res,next)=>{
     next()
 })
 
+/// params() will be called before any handler.
 app.param('param',(req,res,next)=>{
     console.log('params')
     next()

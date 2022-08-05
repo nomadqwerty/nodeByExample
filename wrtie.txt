@@ -1,1 +1,1 @@
-hello nodejsadd this dataadd this dataadd this data
+this is how to open a file
