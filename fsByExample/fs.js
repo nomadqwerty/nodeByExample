@@ -151,31 +151,45 @@ const FH = require('fs')
 //     console.log(err)
 // })
 
-FH.truncate('./wrtie.txt',(err)=>{
-    if(err)console.log(err.message)
-    console.log('trunced')
-})
+// FH.truncate('./wrtie.txt',(err)=>{
+//     if(err)console.log(err.message)
+//     console.log('trunced')
+// })
 
-FH.unlink('./wrtie.txt',(err)=>{
+// FH.unlink('./wrtie.txt',(err)=>{
+//     if(err){
+//         console.log('done')
+//     }
+// })
+
+// // a+
+// FH.readFile('./nuShii',{encoding:'utf-8',flag:'a+'},(err)=>{
+//     if(err)console.log(err.message)
+//     console.log('file created')
+// })
+// FH.readFile('./wrtie.txt',{encoding:'utf-8',flag:'a+'},(err)=>{
+//     if(err)console.log(err.message)
+//     console.log('file created')
+// })
+
+// // FH.unwatchFile('./write.txt')
+
+// FH.utimes('./nuShii.txt',Date.now(),new Date().getDay(),err=>!err?'no error':err.message)
+
+// FH.writeFile('./wrtie.txt','this file was recreated',{encoding:'utf-8'},(err)=>{
+//     if(err)console.log(err.message)
+// })
+
+////////////
+// class: fs.Dir
+
+// const {Dir} = require('fs')
+
+// const dir = FH.opendir()
+
+FH.Stats('./',(err,stats)=>{
+    console.log(stats)
     if(err){
-        console.log('done')
+        console.log(err.message)
     }
-})
-
-// a+
-FH.readFile('./nuShii',{encoding:'utf-8',flag:'a+'},(err)=>{
-    if(err)console.log(err.message)
-    console.log('file created')
-})
-FH.readFile('./wrtie.txt',{encoding:'utf-8',flag:'a+'},(err)=>{
-    if(err)console.log(err.message)
-    console.log('file created')
-})
-
-// FH.unwatchFile('./write.txt')
-
-FH.utimes('./nuShii.txt',Date.now(),new Date().getDay(),err=>!err?'no error':err.message)
-
-FH.writeFile('./wrtie.txt','this file was recreated',{encoding:'utf-8'},(err)=>{
-    if(err)console.log(err.message)
 })
