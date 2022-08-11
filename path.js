@@ -1,7 +1,7 @@
 //path module
 // thjs moule providexs utilities for working with files and directories.
 
-const path = require("path");
+const path = require("path").win32;
 
 // .basename(path,extension)
 const pathPath = path.win32.basename(
@@ -53,3 +53,19 @@ const froM = "../../../Desktop/NodeByExample";
 const to = "../nodeByExample/bufferByExample/buffer.js";
 
 console.log(path.relative(froM, to));
+
+// .resolve
+console.log(
+  path.resolve(
+    "../../../Desktop/NodeByExample",
+    "/bufferByExample/buffer.js",
+    "../nodeByExample/"
+  )
+);
+
+// .sep
+console.log(to.split("/"));
+console.log(to.split(path.sep));
+
+// .namespace
+console.log(path.toNamespacedPath(joinPath));
