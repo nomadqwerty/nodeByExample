@@ -6,12 +6,12 @@ fs-5
 path/stringdecoder-6
 assert-7
 //todo
-global-8
-timers-11
-util-10
+util-8
+debugger-9
+crypto-10
 console-11
-debugger-12
-crypto-13
+timers-12
+global-13
 internationalization-14
 modules:1-4: -15
 report-16
