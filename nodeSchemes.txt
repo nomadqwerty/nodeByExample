@@ -8,9 +8,8 @@ assert-7
 util-8
 debugger-9
 //todo
-inspector
-crypto-10
 console-11
+crypto-10
 queryStrings
 readline
 timers-12
@@ -39,6 +38,7 @@ perf hooks
 // engine based api
 vm
 v8
+inspector
 
 
 
