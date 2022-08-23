@@ -27,3 +27,43 @@ logger.log("from console to stream");
 logger.error(new Error("err message to stream"));
 
 // .clear
+console.log(1);
+// console.clear();
+
+//.count()
+console.count("abc");
+console.count("abc");
+
+//.countReset
+console.countReset("abc");
+console.count("abc");
+
+//.debug()
+console.debug();
+
+//.dir()
+
+let obj = {
+  [Symbol()]: "a",
+  prop: "val",
+};
+console.dir(obj, { showHidden: true, depth: null });
+
+//.error
+console.error("error message");
+
+//,group()
+console.group("abcs", "123", "trueFalse");
+//.info()
+console.info(logger);
+//.table();
+console.table(obj);
+
+//.time(),timeLog(),.timeEnd()
+let d = new Date().getDate();
+console.time(d);
+console.timeLog(d);
+console.timeEnd(d);
+
+//.trace()
+// returns a trace to the point .trace() was called from

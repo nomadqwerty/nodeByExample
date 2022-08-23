@@ -7,25 +7,24 @@ path/stringdecoder-6
 assert-7
 util-8
 debugger-9
-//todo
 console-11
-crypto-10
-queryStrings
-readline
+//todo
 timers-12
 global-13
-internationalization-14
-modules:1-4: -15
+queryStrings
+readline
 report-16
 tty-17
-repl
-report
+crypto-10
 zlib
+internationalization-14
+modules:1-4: -15
 
 // Async api
 async context tracking
 
 // osbased apis
+repl
 cli
 os
 dns
