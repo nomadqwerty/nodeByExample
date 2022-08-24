@@ -8,9 +8,8 @@ assert-7
 util-8
 debugger-9
 console-11
-//todo
 timers-12
-global-13
+//todo
 queryStrings
 readline
 report-16
@@ -18,6 +17,7 @@ tty-17
 crypto-10
 zlib
 internationalization-14
+global-13
 modules:1-4: -15
 
 // Async api
