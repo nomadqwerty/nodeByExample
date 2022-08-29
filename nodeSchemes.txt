@@ -2,6 +2,7 @@ events-1
 error-2
 buffer-3
 stream-4
+readline
 fs-5
 path/stringdecoder-6
 assert-7
@@ -10,9 +11,8 @@ debugger-9
 console-11
 timers-12
 queryStrings
-//todo
-readline
 report-16
+//todo
 tty-17
 crypto-10
 zlib

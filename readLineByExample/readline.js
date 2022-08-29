@@ -48,3 +48,5 @@ rdL.prompt();
 rdL.getPrompt();
 
 //.line
+
+// callback api: readline
