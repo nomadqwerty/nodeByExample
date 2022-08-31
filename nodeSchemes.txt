@@ -41,7 +41,7 @@ inspector
 
 
 
-// web based Api
+// network based Api
 http
 http/2
 https
