@@ -1,7 +1,6 @@
 events-1
 error-2
 buffer-3
-stream-4
 readline
 fs-5
 path/stringdecoder-6
@@ -13,11 +12,9 @@ timers-12
 queryStrings
 report-16
 tty-17
-//todo
-crypto-10
-zlib
-internationalization-14
 global-13
+//todo
+//sep:
 modules:1-4: -15
 
 // Async api
@@ -26,6 +23,7 @@ async context tracking
 // osbased apis
 repl
 cli
+//
 os
 dns
 process
@@ -39,6 +37,11 @@ vm
 v8
 inspector
 
+// for further study
+crypto-10
+zlib
+stream-4
+internationalization-14
 
 
 // network based Api

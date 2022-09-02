@@ -4,9 +4,9 @@ const crypto = require("crypto");
 // class : Cipher
 
 let algo = "aes-192-cbc";
-let password = "hjnkhojnj";
+let password = "password123";
 
-crypto.scrypt(password, "salt", 24, (err, key) => {
+const valEnc = crypto.scrypt(password, "salt", 24, (err, key) => {
   if (err) throw new Error(err.message);
 
   crypto.randomFill(new Uint8Array(16), (err, iv) => {
