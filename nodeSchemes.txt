@@ -22,16 +22,16 @@ async context tracking
 
 //sep:
 // osbased apis
-repl
-cli
 //
-os
-dns
 process
+workerthreads
 childProcesses
 cluster
-workerthreads
+os
+dns
 perf hooks
+repl
+cli
 
 // engine based api
 vm
