@@ -1,8 +1,11 @@
 Error: err message to stream
-    at Object.<anonymous> (C:\Users\linux\Desktop\NodeByExample\nodeByExample\console.js:27:14)
+    at Object.<anonymous> (C:\Users\davex\OneDrive\Desktop\2ndSemester\Node\nodeByExample\consoleByExample\console.js:27:14)
     at Module._compile (node:internal/modules/cjs/loader:1101:14)
     at Object.Module._extensions..js (node:internal/modules/cjs/loader:1153:10)
     at Module.load (node:internal/modules/cjs/loader:981:32)
     at Function.Module._load (node:internal/modules/cjs/loader:822:12)
-    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:81:12)
-    at node:internal/main/run_main_module:17:47
+    at Module.require (node:internal/modules/cjs/loader:1005:19)
+    at require (node:internal/modules/cjs/helpers:102:18)
+    at file:///C:/Users/davex/OneDrive/Desktop/2ndSemester/Node/nodeByExample/es.mjs:6:13
+    at ModuleJob.run (node:internal/modules/esm/module_job:185:25)
+    at async Promise.all (index 0)
