@@ -1,5 +1,5 @@
 const process = require("process");
-
+const event = require("events");
 // beforExit signal is emiited when the are no more pending operations for the eventLoop causing the node process to exit.
 
 // process.on("beforeExit", (code) => {
@@ -20,11 +20,46 @@ const process = require("process");
 
 // process and Promise
 
+const rejects = new Map();
+
 const promise = new Promise((resolve, reject) => {
   return reject("A");
 });
 
-process.on("unhandledRejection", (reason, promise) => {
-  console.log(reason, promise);
-  console.log("unhandled rejection");
+// process.on("unhandledRejection", (reason, promise) => {
+//   // console.log("unhandled rejection");
+//   rejects.set(promise, reason);
+//   // console.log(rejects);
+// });
+
+process.on("rejectionHandled", (promise) => {
+  // console.log("rejection has been handled");
+  rejects.delete(promise);
+  // console.log(rejects);
+  setTimeout(() => {
+    try {
+      throw new Error("some exception");
+    } catch (error) {}
+  }, 500);
 });
+setTimeout(() => {
+  promise.catch((err) => {});
+}, 1000);
+
+// uncaughtExceptions
+// for cantching uncaughtException
+
+process.on("uncaughtException", (err, origin) => {
+  // console.log(err.message, "this was an", origin);
+});
+
+// handling warning events
+process.on("warning", (warnings) => {
+  console.log(warnings.name);
+  console.log(warnings.message);
+  console.log(warnings.stack);
+});
+
+process.emitWarning("this is a warning");
+
+// Nodejs Warnings Names
