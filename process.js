@@ -60,6 +60,51 @@ process.on("warning", (warnings) => {
   console.log(warnings.stack);
 });
 
-process.emitWarning("this is a warning");
-
+// process.emitWarning("this is a warning");
 // Nodejs Warnings Names
+const EE = new event.EventEmitter();
+
+process.stdin.resume();
+process.on("SIGINT", () => {
+  console.log("signal");
+});
+
+// abort node processs with .abort()
+EE.on("signal", () => {
+  console.log("recieved");
+  // process.abort();
+});
+
+EE.emit("signal");
+
+// check for a list of allowed node flags- 156 flags
+// console.log(process.allowedNodeEnvironmentFlags);
+// get system architecture
+console.log(process.arch);
+
+// return command line args with .argv
+// return first element of the argv array with argv0 similar to doing .argv[0]
+
+console.log(process.argv, process.argv0);
+
+// get process channel if process was spawned with ipc
+console.log(process.channel);
+
+// changed directory
+console.log(process.cwd());
+
+try {
+  process.chdir("./assertByExample");
+  console.log(process.cwd());
+} catch (error) {
+  console.log(error.message);
+}
+
+console.log("still here");
+
+// check if the process is spawned with an ipc channel, returs a boolean
+// process.disconnect();
+console.log(process.connected);
+
+// return cpu uptime and and usage*
+console.log(process.cpuUsage({ user: 78000, system: 31000 }));
