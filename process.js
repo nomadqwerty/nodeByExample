@@ -56,8 +56,6 @@ process.on("uncaughtException", (err, origin) => {
 // handling warning events
 process.on("warning", (warnings) => {
   console.log(warnings.name);
-  console.log(warnings.message);
-  console.log(warnings.stack);
 });
 
 // process.emitWarning("this is a warning");
@@ -108,3 +106,36 @@ console.log(process.connected);
 
 // return cpu uptime and and usage*
 console.log(process.cpuUsage({ user: 78000, system: 31000 }));
+
+// current working directory
+console.log(process.cwd());
+
+// set debugger port using
+process.debugPort = 5670;
+
+// disconnect process from ipc channel, make process exit gracefully
+console.log("graceful exit...");
+console.log(process.connected);
+process.disconnect();
+console.log(process.connected);
+
+// avoid duplicate warnings, best practice requires warnings to be emitted only once per process
+
+// process.emitWarning("this is a warning", {
+//   type: "test warning",
+// });
+
+// process.on("warning", function (warning) {
+//   console.log("only emit once");
+
+// });
+
+// look at the userEnviroment, .env
+// console.log(process.env);
+
+// get flags specified when starting node process, withOut the exectuable, node file name or filepath
+console.log(process.execArgv);
+// get filePath specified when starting node process, withOut the flags
+console.log(process.execPath);
+
+// process.exit(0);
