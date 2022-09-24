@@ -138,4 +138,21 @@ console.log(process.execArgv);
 // get filePath specified when starting node process, withOut the flags
 console.log(process.execPath);
 
-// process.exit(0);
+// process.exitCode: exit code pass into process.exit(1||0), .exit() will exit the node process
+process.on("exit", () => {
+  console.log(process.exitCode);
+});
+// process.exit(1);
+
+// using .exit is bad because it will abort async operations, and it is usually called internally in node if the event loops is down with pending tasks
+
+// instead of calling .exit() directly set exitCode to 1 to allow process to exit naturally, or if the process is to be terminated due to errors then use the throw mechanism
+
+// process.exitCode = 1;
+
+// to check pending tasks for the eventLoop
+// .getActiveResourcesInfo
+// console.log(process.getActiveResourcesInfo());
+
+// get nemrical effect groupd identity
+console.log(1, process.getegid());
