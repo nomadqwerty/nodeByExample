@@ -88,3 +88,31 @@ console.log(process.report.filename);
 
 // get full diagnostic report. reports are used for debugging error, so the generate a report create an error object
 // console.log(process.report.getReport(new Error("report this")));
+
+// generate report when:
+// setting to true will generate a report object when either occirs in a process
+// there is fatal Error
+process.report.reportOnFatalError = false;
+// there is an uncaught exception
+process.report.reportOnUncaughtException = false;
+// there is a report signal
+process.report.reportOnSignal = false;
+
+// trigger report with signals. using
+// process.report.signal = "SIGNAL";
+
+// write report object to a file or to the terminal.
+// process.report.writeReport(
+//   "./processReport.txt",
+//   new Error("report to a file")
+// );
+// process.report.writeReport(process.stdout, new Error("report to a file"));
+
+// if ever want to know about the resource the process is using use the
+// console.log(process.resourceUsage());
+
+console.log(process.stderr.fd);
+// console.log(process.stdin.read());
+process.stdin.pipe(process.stdout);
+
+// process i.o
