@@ -92,11 +92,11 @@ console.log(process.report.filename);
 // generate report when:
 // setting to true will generate a report object when either occirs in a process
 // there is fatal Error
-process.report.reportOnFatalError = false;
-// there is an uncaught exception
-process.report.reportOnUncaughtException = false;
-// there is a report signal
-process.report.reportOnSignal = false;
+// process.report.reportOnFatalError = false;
+// // there is an uncaught exception
+// process.report.reportOnUncaughtException = false;
+// // there is a report signal
+// process.report.reportOnSignal = false;
 
 // trigger report with signals. using
 // process.report.signal = "SIGNAL";
@@ -111,8 +111,30 @@ process.report.reportOnSignal = false;
 // if ever want to know about the resource the process is using use the
 // console.log(process.resourceUsage());
 
-console.log(process.stderr.fd);
+// console.log(process.stderr.fd);
 // console.log(process.stdin.read());
-process.stdin.pipe(process.stdout);
+// process.stdin.pipe(process.stdout);
 
-// process i.o
+// process throw deprication
+// set to node to either throw the warning or not. True or False
+// process.throwDeprecation = false;
+
+//print stack trace of deprecation warnings
+process.traceDeprecation = true;
+
+process.emitWarning("test", "DeprecationWarning");
+
+// get the title of a process
+console.log("title: ", process.title);
+
+//check how long a node process has been Running
+console.log("node process uptime: ", process.uptime());
+
+// check node versions
+console.log("node version: ", process.version);
+
+// check version of nodejs core dependencies
+console.log("node dependencies versions: ", process.versions);
+
+// exit codes 1-14
+// process.exit();
