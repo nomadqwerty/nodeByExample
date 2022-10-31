@@ -1,1 +1,1 @@
-process.send("hello world");
+// process.send("hello world");
