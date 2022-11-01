@@ -39,18 +39,146 @@ const readFile = fsRead("./nodeSchemes.txt", {});
 
 // http stream.
 
-const server = http.createServer((req, res) => {
-  req.on("data", (data) => {
-    console.log("data");
-    const dataObj = JSON.parse(data.toString("utf8"));
-    res.write(typeof dataObj + " \n");
+// const server = http.createServer((req, res) => {
+//   req.on("data", (data) => {
+//     console.log("data");
+//     const dataObj = JSON.parse(data.toString("utf8"));
+//     res.write(typeof dataObj + " \n");
+//   });
+//   req.on("end", () => {
+//     console.log("ended");
+//     // drain:
+//     // try {
+//     //   let i = 10000000;
+//     //   write();
+//     //   function write() {
+//     //     let bool = true;
+//     //     do {
+//     //       i--;
+//     //       if (i === 0) {
+//     //         res.write("i is now zero");
+//     //       } else {
+//     //         ok = res.write("is the mark reached");
+//     //       }
+//     //     } while (i > 0 && ok);
+//     //     {
+//     //       if (i > 0) {
+//     //         res.once("drain", () => {
+//     //           console.log("internal buffer drained");
+//     //           write();
+//     //         });
+//     //       }
+//     //     }
+//     //   }
+//     // } catch (error) {
+//     //   console.log(error.message);
+//     // }
+
+//     res.write("data", "utf8", () => {
+//       console.log("data");
+//     });
+//     res.on("error", (error) => {
+//       console.log("error occured while writing data");
+//     });
+//     res.end("hello world");
+//     res.on("finish", () => {
+//       console.log("finished sending data");
+//     });
+//     res.on("close", () => {
+//       console.log("close event emitted");
+//     });
+//   });
+// });
+
+// server.listen(3001, () => {
+//   console.log("running....");
+// });
+
+// writable streams ie the res object in servers expose a write and end interface. this enables to write data to the stream.
+
+// both read and write streams use event emitters, but the read stream use special events to notfy the app if the is incoming data on the stream.
+
+// writable stream examples
+// http client side request, http server side response, fs write streams, process stdio, zlib streams, crypto streams.
+
+// above example of the res object writing data to the client.
+
+// working with writable streams
+////////////////////////////////
+// events:
+// 'close': emitted once the stream is closed and no other operation is to occur.
+
+// 'drain': emitted when the internal buffer is drained and it is safe to continue writing data
+
+// "error": emitted when an error occured while writing data to the stream.
+
+// "finish": emitted write stream calls the end() method to end the stream
+// const server = http.createServer((req, res) => {
+//   req.on("data", (data) => {
+//     console.log("data");
+//     const dataObj = JSON.parse(data.toString("utf8"));
+//     res.write(typeof dataObj + " \n");
+//   });
+//   req.on("end", () => {
+//     console.log("ended");
+//     // drain:
+//     // try {
+//     //   let i = 10000000;
+//     //   write();
+//     //   function write() {
+//     //     let bool = true;
+//     //     do {
+//     //       i--;
+//     //       if (i === 0) {
+//     //         res.write("i is now zero");
+//     //       } else {
+//     //         ok = res.write("is the mark reached");
+//     //       }
+//     //     } while (i > 0 && ok);
+//     //     {
+//     //       if (i > 0) {
+//     //         res.once("drain", () => {
+//     //           console.log("internal buffer drained");
+//     //           write();
+//     //         });
+//     //       }
+//     //     }
+//     //   }
+//     // } catch (error) {
+//     //   console.log(error.message);
+//     // }
+
+//     res.write("data", "utf8", () => {
+//       console.log("data");
+//     });
+//     res.on("error", (error) => {
+//       console.log("error occured while writing data");
+//     });
+//     res.end("hello world");
+//     res.on("finish", () => {
+//       console.log("finished sending data");
+//     });
+//     res.on("close", () => {
+//       console.log("close event emitted");
+//     });
+//   });
+// });
+
+// server.listen(3001, () => {
+//   console.log("running....");
+// });
+
+// http server pipe implementation.
+const serverPipe = http.createServer(async (req, res) => {
+  res.on("pipe", async (reqPipe) => {
+    console.log("req is piping to res");
+    res.write("the migos");
+    reqPipe.on("data", (data) => {});
+    res.end("pipe it up");
   });
-  req.on("end", () => {
-    console.log("ended");
-    res.end("hello world");
-  });
+  req.pipe(res);
 });
 
-server.listen(3001, () => {
-  console.log("running....");
+serverPipe.listen(3001, () => {
+  console.log("stream piped up");
 });
