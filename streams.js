@@ -19,12 +19,11 @@ const stream = require("stream");
 // ie src=dataChunkA>>>>>>>>buffer[dataChunkA]>>>>>>dst=dataChunkA
 
 // the amount of data(bytes) a buffer can hold can be specied by the high watermark option.
-const fs = require("fs");
 const http = require("http");
 
-const fsRead = fs.createReadStream;
+// const fsRead = fs.createReadStream;
 
-const readFile = fsRead("./nodeSchemes.txt", {});
+// const readFile = fsRead("./nodeSchemes.txt", {});
 // readable stream bufferring
 // the data that has been pushed out by the read stream implementation will sit in the internal buffer. if the buffer is full(high water mark is reached) the data will stop being read until the buffer is drained). the buffer is drained by consuming the data stored in it.
 
@@ -170,15 +169,77 @@ const readFile = fsRead("./nodeSchemes.txt", {});
 
 // http server pipe implementation.
 const serverPipe = http.createServer(async (req, res) => {
+  console.log(res.writableHighWaterMark);
   res.on("pipe", async (reqPipe) => {
-    console.log("req is piping to res");
-    res.write("the migos");
-    reqPipe.on("data", (data) => {});
-    res.end("pipe it up");
+    res.cork();
+    console.log(res.writableCorked);
+    console.log("data in queue to be written: ", res.writableLength);
+    res.write("the migos", "utf8", (error) => {
+      if (error) console.log(error.message);
+
+      console.log("data has be written and flushed");
+    });
+    res.write("culture3");
+    console.log("is buffer full: ", res.writableNeedDrain);
+    console.log("is stream in Obect mode: ", res.writableObjectMode);
+    console.log("data in queue to be written: ", res.writableLength);
+    req.on("data", (data) => {});
+    res.uncork();
+    console.log("data in queue to be written: ", res.writableLength);
+    req.unpipe(res);
+  });
+  res.on("unpipe", () => {
+    console.log("req is unpiped");
+    // res.destroy(new Error("destroyed stream"));
+    // console.log(res.errored);
+    res.end("pipe it up", "utf8", () => {
+      console.log("cycle ended");
+    });
+
+    console.log("is finished: ", res.writableFinished);
   });
   req.pipe(res);
 });
 
-serverPipe.listen(3001, () => {
-  console.log("stream piped up");
+// serverPipe.listen(3001, () => {
+//   console.log("stream piped up");
+// });
+
+// the cork method forces all written data to be buffered to memory. to flush data from internal buffer , use writeStream.uncork() or writeStream.end(). for each call to cork and equal amount of calls to uncork is required
+
+// destroy method, with immediately destroy the stream, this may lead to errors if the previous data is not streamed completely thus lead to loss of data.use end() to close a stream grcefully. this can also be used if error occured while writing data
+
+// .closed: boolean, returns true if stream is closed.
+
+// .destroyed: boolean, returns true if stream is destroyed.
+
+// .end(): signals end of a stream, no further data is read or written.
+
+// set deafault encoding for the stream.
+
+// writableStream.writable, returns true(boolean), if stream is still open for writting
+
+// .writableEnded: returns false if stream is open
+
+// .writableCorked : number of time corked was called
+
+// writable.errored: Returns error if the stream has been destroyed with an error.
+
+// write.writableFinished: returns true if called befor the finish event is emitted.
+
+// write.highWaterMark: Returns the high water mark property on the stream.
+
+// write.writableLength: this specifies the amount of data(bytes) in queue to be written to a dst.
+
+// writableNeedDrain: this returns a bolean if the buffer is full. if so the streeam will emit a drain event.
+
+// writableObjectMode: check if stream is in object mode.
+// write: this method is used to write data to stream, it will return true if data is written and false if not. if false the internal buffer needs to be drained. any further writs can cause memory usage issues.
+
+// writable streams with fs api.
+const fs = require("fs");
+const fsWritable = fs.createWriteStream("./writable.txt", {
+  encoding: "utf8",
+  flag: "w",
 });
+console.log(fsWritable.writableHighWaterMark);

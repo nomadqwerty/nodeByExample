@@ -1,6 +1,7 @@
 // http
 const http = require("http");
 const net = require("net");
+const url = require("url");
 const stream = require("stream");
 
 // node http makes it easy to use some certain protocol featured that are difficult to use.
@@ -62,3 +63,7 @@ const agent = new http.Agent({
 
 // //////
 // http.ClientRequest
+// this object is created internally when http.request() is called. it represents an inprogress request whos header has already been queued. the header property is still mutable.
+
+// to get response , "response" event will be emitted when the server responds to the request. the cb is passed an object of response or http.incomingMessage
+//
