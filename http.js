@@ -65,5 +65,61 @@ const agent = new http.Agent({
 // http.ClientRequest
 // this object is created internally when http.request() is called. it represents an inprogress request whos header has already been queued. the header property is still mutable.
 
-// to get response , "response" event will be emitted when the server responds to the request. the cb is passed an object of response or http.incomingMessage
+// to get response , "response" event will be emitted when the server responds to the request. the cb is passed an instnace of response or http.incomingMessage
 //
+const proxy = http.createServer((req, res) => {
+  res.setHeader("Date", new Date());
+  res.setHeader("Content-Type", "text/plain");
+  res.writeHead(200);
+  res.end("some data over a socket");
+});
+
+proxy.on("connect", (req, clientSocket, head) => {
+  const { port, hostname } = new URL(`http://${req.url}`);
+  console.log("here");
+  const serverSocket = net.connect(port || 3000, hostname, () => {
+    console.log("socket connected from server");
+    console.log("head: ", head.length);
+
+    clientSocket.write(
+      "HTTP/1.1 200 Connection Established\r\n" +
+        "Proxy-agent: Node.js-Proxy\r\n" +
+        "\r\n"
+    );
+    serverSocket.write(head);
+    serverSocket.pipe(clientSocket);
+    clientSocket.pipe(serverSocket);
+  });
+});
+
+let serverPort = 3000;
+proxy.listen(serverPort, () => {
+  console.log("proxy running...");
+
+  const options = {
+    port: serverPort,
+    host: "127.0.0.1",
+    method: "CONNECT",
+    path: "127.0.0.1:3000",
+  };
+
+  const req = http.request(options);
+  req.end();
+
+  req.on("connect", (res, socket, head) => {
+    console.log("connected from client");
+    console.log(head.length);
+    socket.write(
+      "GET / HTTP/1.1\r\n" +
+        "Host: www.google.com:80\r\n" +
+        "Connection: close\r\n" +
+        "\r\n"
+    );
+    socket.on("data", (chunk) => {
+      console.log(chunk.toString());
+    });
+    socket.on("end", () => {
+      proxy.close();
+    });
+  });
+});
