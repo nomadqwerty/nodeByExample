@@ -68,58 +68,96 @@ const agent = new http.Agent({
 // to get response , "response" event will be emitted when the server responds to the request. the cb is passed an instnace of response or http.incomingMessage
 //
 const proxy = http.createServer((req, res) => {
+  console.log(req.url);
   res.setHeader("Date", new Date());
   res.setHeader("Content-Type", "text/plain");
-  res.writeHead(200);
+  res.writeHead(101);
   res.end("some data over a socket");
 });
 
-proxy.on("connect", (req, clientSocket, head) => {
-  const { port, hostname } = new URL(`http://${req.url}`);
-  console.log("here");
-  const serverSocket = net.connect(port || 3000, hostname, () => {
-    console.log("socket connected from server");
-    console.log("head: ", head.length);
+// proxy.on("connect", (req, clientSocket, head) => {
+//   const { port, hostname } = new URL(`http://${req.url}`);
+//   console.log("here");
+//   const serverSocket = net.connect(port || 3000, hostname, () => {
+//     console.log("socket connected from server");
+//     console.log("head: ", head.length);
 
-    clientSocket.write(
-      "HTTP/1.1 200 Connection Established\r\n" +
-        "Proxy-agent: Node.js-Proxy\r\n" +
-        "\r\n"
-    );
-    serverSocket.write(head);
-    serverSocket.pipe(clientSocket);
-    clientSocket.pipe(serverSocket);
-  });
-});
+//     clientSocket.write(
+//       "HTTP/1.1 200 Connection Established\r\n" +
+//         "Proxy-agent: Node.js-Proxy\r\n" +
+//         "\r\n"
+//     );
+//     serverSocket.write(head);
+//     serverSocket.pipe(clientSocket);
+//     clientSocket.pipe(serverSocket);
+//   });
+// });
 
 let serverPort = 3000;
 proxy.listen(serverPort, () => {
   console.log("proxy running...");
 
-  const options = {
-    port: serverPort,
-    host: "127.0.0.1",
-    method: "CONNECT",
-    path: "127.0.0.1:3000",
-  };
+  // const options = {
+  //   port: serverPort,
+  //   host: "127.0.0.1",
+  //   method: "CONNECT",
+  //   path: "127.0.0.1:3000",
+  // };
 
-  const req = http.request(options);
-  req.end();
+  // const req = http.request(options);
+  // req.end();
+  // req.on("finish", () => {
+  //   console.log("finished");
+  // });
+  // req.on("connect", (res, socket, head) => {
+  //   console.log("connected from client");
+  //   console.log(head.length);
+  //   socket.write(
+  //     "GET / HTTP/1.1\r\n" +
+  //       "Host: www.google.com:80\r\n" +
+  //       "Connection: close\r\n" +
+  //       "\r\n"
+  //   );
+  //   socket.on("data", (chunk) => {
+  //     console.log(chunk.toString());
+  //   });
+  //   socket.on("end", () => {
+  //     proxy.close();
+  //   });
+  // });
+});
 
-  req.on("connect", (res, socket, head) => {
-    console.log("connected from client");
-    console.log(head.length);
-    socket.write(
-      "GET / HTTP/1.1\r\n" +
-        "Host: www.google.com:80\r\n" +
-        "Connection: close\r\n" +
-        "\r\n"
-    );
-    socket.on("data", (chunk) => {
-      console.log(chunk.toString());
-    });
-    socket.on("end", () => {
-      proxy.close();
-    });
-  });
+// eventss:
+// "finish"- emitted when ever the request stream is closed, when end() is called or data has finished streaming.
+
+// "information". this event is emitted when ever the server responds with a 1** code, 100 continue, 101 upgrade etc. review info res codes, 100 - 199
+
+const options = {
+  host: "127.0.0.1",
+  port: serverPort,
+  path: "/server",
+};
+const infoReq = http.request(options);
+
+infoReq.end();
+
+infoReq.on("error", (error) => {
+  console.log(error.message);
+});
+infoReq.on("information", (info) => {
+  console.log("info recieved");
+});
+
+// response event emits when server responsed to request
+infoReq.on("response", (res) => {
+  // console.log(res);
+});
+
+// socket: emitted when there is a socket connection
+
+// timeout: emitted when ever socket connection times out
+
+// upgrade: event is emitted when ever the server responds with a 101 upgrade status code
+infoReq.on("upgrade", (res, socket, head) => {
+  console.log("upgrade response");
 });

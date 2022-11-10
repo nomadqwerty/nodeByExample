@@ -237,9 +237,46 @@ const serverPipe = http.createServer(async (req, res) => {
 // write: this method is used to write data to stream, it will return true if data is written and false if not. if false the internal buffer needs to be drained. any further writs can cause memory usage issues.
 
 // writable streams with fs api.
-const fs = require("fs");
-const fsWritable = fs.createWriteStream("./writable.txt", {
-  encoding: "utf8",
-  flag: "w",
-});
-console.log(fsWritable.writableHighWaterMark);
+// const fs = require("fs");
+// const fsWritable = fs.createWriteStream("./writable.txt", {
+//   encoding: "utf8",
+//   flag: "w",
+// });
+// console.log(fsWritable.writableHighWaterMark);
+
+// fsWritable.on("error", (err) => {
+//   fsWritable.errored = err;
+// });
+// fsWritable.on("finish", () => {
+//   console.log("stream is closed");
+// });
+// const writer = (str) => {
+//   fsWritable.write(str + "\n", (err) => {
+//     if (err) {
+//       console.log(err.message);
+//       return;
+//     }
+//     console.log("flushed");
+//     return;
+//   });
+// };
+
+// writer("its a good day to serve the Lord, he is worthy.");
+// writer("we offer our selves as living sacrifices unto him.");
+
+// setTimeout(() => {
+//   fsWritable.destroy(new Error("stream is destroyed "));
+// }, 2500);
+
+// Readable streams: Readable streams are an abstraction for a source from which it consumes data.
+
+// read stream can be in two modes: paused mode or flow mode. note these mode are different from objectmode as a stream can be in object mode or not , regardless of if the stream is flowing or paused.
+
+// flow mode: data is read from source to destination continually and as quickly as possible.
+
+// paused mode: data is read from source to destination only when readable.read() is implicitly called.
+
+// switching modes in readables.
+// all readbles start in paused mode but then it is switched to flow mode by calling resume, listening for the data event or piping to a writable stream.
+
+// and readbles can be switched to paused by  calling readable.pause(), removing eventListener, or unpiping from a writable.
