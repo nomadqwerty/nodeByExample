@@ -279,4 +279,33 @@ const serverPipe = http.createServer(async (req, res) => {
 // switching modes in readables.
 // all readbles start in paused mode but then it is switched to flow mode by calling resume, listening for the data event or piping to a writable stream.
 
-// and readbles can be switched to paused by  calling readable.pause(), removing eventListener, or unpiping from a writable.
+// and readbles can be switched to paused by  calling readable.pause(), or unpiping from a writable. removing event listener will not pause streams.
+
+// readable streams will not generate data until a mechanism for consuming data is provided, if mechanism is disabled or deleted.
+
+// on a lower level there are three modes.
+// readableFlowing === null
+// readableFlowing === false
+// readableFlowing === true
+
+// when flowing is null, no data consuming mechanism is provided.
+// when flowing is false, stream has been unpiped or paused or recieving backpressure.
+// when flowing is true, stream has been piped or resumed or there is a data event listener.
+
+// choose one style of Api usage
+// events: 'data' or 'readable'
+// pipe
+
+// stream Events: Readable
+
+// "close": this event is emitted anytime a stream is closed.
+
+// "data": this event is emitted when ever the data is being read from the source. if stream is in object mode the data will be a string or buffer. listening for "data" will cause the stream to be switched to flow mode. the stream reliquishs ownership ofthe data to a consumer(event listener)
+
+// "end": this event is emitted when there is no more data to be read.
+
+// "error": this event is emitted when there is an error while streaming.
+
+// "pause": this event is emitted when the pause() is called by the read stream implementation.
+
+// "readable": this event is emitted when there is data to be read or new data has been read.

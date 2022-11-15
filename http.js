@@ -94,48 +94,72 @@ const proxy = http.createServer((req, res) => {
 // });
 
 let serverPort = 3000;
-proxy.listen(serverPort, () => {
-  console.log("proxy running...");
+// proxy.listen(serverPort, () => {
+//   console.log("proxy running...");
 
-  // const options = {
-  //   port: serverPort,
-  //   host: "127.0.0.1",
-  //   method: "CONNECT",
-  //   path: "127.0.0.1:3000",
-  // };
+// const options = {
+//   port: serverPort,
+//   host: "127.0.0.1",
+//   method: "CONNECT",
+//   path: "127.0.0.1:3000",
+// };
 
-  // const req = http.request(options);
-  // req.end();
-  // req.on("finish", () => {
-  //   console.log("finished");
-  // });
-  // req.on("connect", (res, socket, head) => {
-  //   console.log("connected from client");
-  //   console.log(head.length);
-  //   socket.write(
-  //     "GET / HTTP/1.1\r\n" +
-  //       "Host: www.google.com:80\r\n" +
-  //       "Connection: close\r\n" +
-  //       "\r\n"
-  //   );
-  //   socket.on("data", (chunk) => {
-  //     console.log(chunk.toString());
-  //   });
-  //   socket.on("end", () => {
-  //     proxy.close();
-  //   });
-  // });
-});
+// const req = http.request(options);
+// req.end();
+// req.on("finish", () => {
+//   console.log("finished");
+// });
+// req.on("connect", (res, socket, head) => {
+//   console.log("connected from client");
+//   console.log(head.length);
+//   socket.write(
+//     "GET / HTTP/1.1\r\n" +
+//       "Host: www.google.com:80\r\n" +
+//       "Connection: close\r\n" +
+//       "\r\n"
+//   );
+//   socket.on("data", (chunk) => {
+//     console.log(chunk.toString());
+//   });
+//   socket.on("end", () => {
+//     proxy.close();
+//   });
+// });
+// });
 
 // eventss:
 // "finish"- emitted when ever the request stream is closed, when end() is called or data has finished streaming.
 
 // "information". this event is emitted when ever the server responds with a 1** code, 100 continue, 101 upgrade etc. review info res codes, 100 - 199
+const server = http.createServer((req, res) => {
+  res.writeHead(200, { "Content-Type": "text/plain" });
+  res.end("okay");
+});
 
+server.on("upgrade", (req, socket, head) => {
+  console.log("upgrade request");
+  socket.write(
+    "HTTP/1.1 101 Web Socket Protocol Handshake\r\n" +
+      "Upgrade: WebSocket\r\n" +
+      "Connection: Upgrade\r\n" +
+      "\r\n"
+  );
+
+  socket.pipe(socket);
+});
+server.on("error", (error) => {
+  console.log(error);
+});
+server.listen(serverPort, "127.0.0.1", () => {
+  console.log("running");
+});
 const options = {
   host: "127.0.0.1",
-  port: serverPort,
-  path: "/server",
+  port: 3000,
+  headers: {
+    Connection: "Upgrade",
+    Upgrade: "websocket",
+  },
 };
 const infoReq = http.request(options);
 
@@ -160,4 +184,6 @@ infoReq.on("response", (res) => {
 // upgrade: event is emitted when ever the server responds with a 101 upgrade status code
 infoReq.on("upgrade", (res, socket, head) => {
   console.log("upgrade response");
+  socket.end();
+  process.exit(0);
 });
