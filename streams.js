@@ -298,14 +298,60 @@ const serverPipe = http.createServer(async (req, res) => {
 
 // stream Events: Readable
 
-// "close": this event is emitted anytime a stream is closed.
+const serverRead = http.createServer((req, res) => {
+  // "data": this event is emitted when ever the data is being read from the source. if stream is in object mode the data will be a string or buffer. listening for "data" will cause the stream to be switched to flow mode. the stream reliquishs ownership ofthe data to a consumer(event listener)
+  req.on("data", (data) => {
+    // pause the flow of data
+    req.pause();
+    console.log(data.toString("utf8"));
+    // resume flow of data
+    req.resume();
+  });
+  // only use readable or data event, not both.
+  // "readable": this event is emitted when there is data to be read or new data has been read.
+  // req.on("readable", () => {
+  //   let data;
+  //   // perform read operation in the condition parenteses
+  //   // every time readable.read() is called if there is data it will return a string or buffer(if stream is in object mode)
+  //   while ((data = req.read())) {
+  //     console.log(data.toString("utf8"));
+  //   }
+  // });
+  // "close": this event is emitted anytime a stream is closed.
+  req.on("close", () => {
+    console.log("closing stream......");
+  });
+  // "end": this event is emitted when there is no more data to be read.
+  req.on("end", () => {
+    console.log("request stream ended, finished reading data");
+  });
+  // "error": this event is emitted when there is an error while streaming.
+  req.on("error", (err) => {
+    console.log(err.message);
+    console.log(err.stack);
+  });
+  // "pause": this event is emitted when the pause() is called by the read stream implementation.
+  req.on("pause", () => {
+    console.log(
+      "stream has been paused, wont read data until stream is resumed"
+    );
+  });
+  // The 'resume' event is emitted when stream.resume() is called and readableFlowing is not true.
+  req.on("resume", () => {
+    console.log("resuming stream...");
+  });
+  //////////////
+  res.end("helloWorld");
+});
 
-// "data": this event is emitted when ever the data is being read from the source. if stream is in object mode the data will be a string or buffer. listening for "data" will cause the stream to be switched to flow mode. the stream reliquishs ownership ofthe data to a consumer(event listener)
+serverRead.on("error", (err) => {
+  console.log(err.message);
+  console.log(err.stack);
+});
 
-// "end": this event is emitted when there is no more data to be read.
+serverRead.listen(3002, () => {
+  console.log("read running");
+});
 
-// "error": this event is emitted when there is an error while streaming.
-
-// "pause": this event is emitted when the pause() is called by the read stream implementation.
-
-// "readable": this event is emitted when there is data to be read or new data has been read.
+// read stream methods:
+// .destroy([error])
