@@ -159,10 +159,12 @@ const options = {
   headers: {
     Connection: "Upgrade",
     Upgrade: "websocket",
+    contentType: "text/plain",
   },
 };
 const infoReq = http.request(options);
-
+// .removeHeader(name/key), removes the specified value form the header: do this before req is sent
+infoReq.removeHeader("contentType");
 infoReq.end();
 
 infoReq.on("error", (error) => {
@@ -187,3 +189,54 @@ infoReq.on("upgrade", (res, socket, head) => {
   socket.end();
   process.exit(0);
 });
+// flushHeaders()
+// by default node stores req headers in a buffer, until req.end() id called or data from req is recived. node then packs the header and data into one packet and sends it over tcp. this saves the req from being sent more than once over tcp.
+// flushHeaders() , prevents this behaviour.
+
+// getHeader(key)
+// this function is used to retrieve a value
+console.log(infoReq.getHeader("host"));
+// getHeaderNames()
+// this function is used to retrieve all keys in req header
+console.log(infoReq.getHeaderNames());
+
+// getHeaders()
+// returns a copy of the header object
+console.log(infoReq.getHeaders());
+
+// getRawHeaderNames(), this will return an array of all raw headers.
+console.log(infoReq.getRawHeaderNames());
+
+// .hasHeader(name/key)
+// checks if a given name/key is part of req header
+
+// .maxHeaderCount- property for limiting maximum response header count
+
+// .path = prop for resource path requested
+
+// .method - holds the http method used for req.
+
+// .host - holds the server domain.
+
+// .protocol -  holds the networking protocol.
+
+/////////////////////reused socket//////////
+const reuse = http
+  .createServer((req, res) => {
+    res.write("hello\n");
+    res.end();
+  })
+  .listen(3005, () => {
+    console.log("reuse running.....");
+  });
+setInterval(() => {
+  console.log("request.....");
+  http.get("http://localhost:3005"),
+    { agent },
+    (res) => {
+      console.log("response");
+      res.on("data", () => {
+        console.log("incoming response");
+      });
+    };
+}, 5000);
