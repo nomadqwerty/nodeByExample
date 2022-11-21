@@ -309,10 +309,12 @@ const serverRead = http.createServer((req, res) => {
   });
   // only use readable or data event, not both.
   // "readable": this event is emitted when there is data to be read or new data has been read.
+  // by using .read(), we read chunks of data, we can also specify the size of the data chunk, read(size)
   // req.on("readable", () => {
   //   let data;
   //   // perform read operation in the condition parenteses
   //   // every time readable.read() is called if there is data it will return a string or buffer(if stream is in object mode)
+  // we neeed a loop to cnsume all the data.
   //   while ((data = req.read())) {
   //     console.log(data.toString("utf8"));
   //   }
@@ -324,6 +326,7 @@ const serverRead = http.createServer((req, res) => {
   // "end": this event is emitted when there is no more data to be read.
   req.on("end", () => {
     console.log("request stream ended, finished reading data");
+    console.log("is open: ", req.readable);
   });
   // "error": this event is emitted when there is an error while streaming.
   req.on("error", (err) => {
@@ -340,7 +343,27 @@ const serverRead = http.createServer((req, res) => {
   req.on("resume", () => {
     console.log("resuming stream...");
   });
+  // read stream methods and props:
+  // .destroy([error]): this will emit an error event if error was passed as an arg, will also emit a close event.
+  // req.destroy(new Error("destroyed due to errors"));
+
+  // .closed: returns bool after stream is closed
+  // console.log(req.closed);
+
+  // .destroyed:  returns bool after stream is destroyed
+  // console.log(req.destroyed)
+
+  // .isPaused(): returns a bool to indicate the state of the stream
+
+  req.pause();
+  console.log(req.isPaused());
   //////////////
+
+  // .pipe(), this makes it possible to pipe a read stream to a write stream, this wll cause the data to flow into write stream to be written to the destination.
+  // req.pipe(res)
+
+  // .readable: returns bool is stream is still open for read operations
+  console.log("is open: ", req.readable);
   res.end("helloWorld");
 });
 
@@ -352,6 +375,3 @@ serverRead.on("error", (err) => {
 serverRead.listen(3002, () => {
   console.log("read running");
 });
-
-// read stream methods:
-// .destroy([error])

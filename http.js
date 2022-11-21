@@ -150,62 +150,65 @@ server.on("upgrade", (req, socket, head) => {
 server.on("error", (error) => {
   console.log(error);
 });
-server.listen(serverPort, "127.0.0.1", () => {
-  console.log("running");
-});
-const options = {
-  host: "127.0.0.1",
-  port: 3000,
-  headers: {
-    Connection: "Upgrade",
-    Upgrade: "websocket",
-    contentType: "text/plain",
-  },
-};
-const infoReq = http.request(options);
-// .removeHeader(name/key), removes the specified value form the header: do this before req is sent
-infoReq.removeHeader("contentType");
-infoReq.end();
+// server.listen(serverPort, "127.0.0.1", () => {
+//   console.log("running");
+// });
+// const options = {
+//   host: "127.0.0.1",
+//   port: 3000,
+//   headers: {
+//     Connection: "Upgrade",
+//     Upgrade: "websocket",
+//     contentType: "text/plain",
+//   },
+// };
+// const infoReq = http.request(options);
+// // .removeHeader(name/key), removes the specified value form the header: do this before req is sent
+// infoReq.removeHeader("contentType");
+// // setHeader: this is used to insert headersnames into the header object.
 
-infoReq.on("error", (error) => {
-  console.log(error.message);
-});
-infoReq.on("information", (info) => {
-  console.log("info recieved");
-});
+// infoReq.setHeader("Cookie", ["type:dmc", "language=ikwerreScript"]);
+// infoReq.end();
 
-// response event emits when server responsed to request
-infoReq.on("response", (res) => {
-  // console.log(res);
-});
+// infoReq.on("error", (error) => {
+//   console.log(error.message);
+// });
+// infoReq.on("information", (info) => {
+//   console.log("info recieved");
+// });
+
+// // response event emits when server responsed to request
+// infoReq.on("response", (res) => {
+//   // console.log(res);
+// });
 
 // socket: emitted when there is a socket connection
 
 // timeout: emitted when ever socket connection times out
 
 // upgrade: event is emitted when ever the server responds with a 101 upgrade status code
-infoReq.on("upgrade", (res, socket, head) => {
-  console.log("upgrade response");
-  socket.end();
-  process.exit(0);
-});
+// infoReq.on("upgrade", (res, socket, head) => {
+//   console.log("upgrade response");
+//   socket.end();
+//   process.exit(0);
+// });
 // flushHeaders()
 // by default node stores req headers in a buffer, until req.end() id called or data from req is recived. node then packs the header and data into one packet and sends it over tcp. this saves the req from being sent more than once over tcp.
 // flushHeaders() , prevents this behaviour.
 
 // getHeader(key)
 // this function is used to retrieve a value
-console.log(infoReq.getHeader("host"));
+// console.log(infoReq.getHeader("host"));
 // getHeaderNames()
 // this function is used to retrieve all keys in req header
-console.log(infoReq.getHeaderNames());
+// console.log(infoReq.getHeaderNames());
 
 // getHeaders()
 // returns a copy of the header object
-console.log(infoReq.getHeaders());
+// console.log(infoReq.getHeaders());
 
 // getRawHeaderNames(), this will return an array of all raw headers.
-console.log(infoReq.getRawHeaderNames());
+// console.log(infoReq.getRawHeaderNames());
 
 // .hasHeader(name/key)
 // checks if a given name/key is part of req header
@@ -221,22 +224,38 @@ console.log(infoReq.getRawHeaderNames());
 // .protocol -  holds the networking protocol.
 
 /////////////////////reused socket//////////
-const reuse = http
+// const reuse = http
+//   .createServer((req, res) => {
+//     res.write("hello\n");
+//     res.end();
+//   })
+//   .listen(3005, () => {
+//     console.log("reuse running.....");
+//   });
+// setInterval(() => {
+//   console.log("request.....");
+//   http.get("http://localhost:3005"),
+//     { agent },
+//     (res) => {
+//       console.log("response");
+//       res.on("data", () => {
+//         console.log("incoming response");
+//       });
+//     };
+// }, 5000);
+
+////////////////////////////////////////////////////
+// http.Server
+
+const server1 = http
   .createServer((req, res) => {
-    res.write("hello\n");
     res.end();
   })
-  .listen(3005, () => {
-    console.log("reuse running.....");
+  .listen(3006, () => {
+    console.log("server running....");
   });
-setInterval(() => {
-  console.log("request.....");
-  http.get("http://localhost:3005"),
-    { agent },
-    (res) => {
-      console.log("response");
-      res.on("data", () => {
-        console.log("incoming response");
-      });
-    };
-}, 5000);
+
+// if client request comes with an http : expect: 100-continue, this means the client expoects a 100 continue response from the server before the client will send any data.
+
+server1.on("checkContinue", (req, res) => {});
+server1.on("checkExpectation", (req, res) => {});
