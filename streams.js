@@ -298,7 +298,27 @@ const serverPipe = http.createServer(async (req, res) => {
 
 // stream Events: Readable
 
-const serverRead = http.createServer((req, res) => {
+// async read stream events
+
+const readAsync = async (readable) => {
+  try {
+    let data = "";
+
+    for await (const chunk of readable.iterator({ destroyOnReturn: false })) {
+      data += chunk;
+    }
+
+    data.toString("utf8");
+    console.log("from async iterator", data);
+    console.log(readable.destroyed);
+    return data;
+  } catch (error) {
+    console.log(error.message);
+    return error;
+  }
+};
+
+const serverRead = http.createServer(async (req, res) => {
   // "data": this event is emitted when ever the data is being read from the source. if stream is in object mode the data will be a string or buffer. listening for "data" will cause the stream to be switched to flow mode. the stream reliquishs ownership ofthe data to a consumer(event listener)
   req.on("data", (data) => {
     // pause the flow of data
@@ -364,6 +384,47 @@ const serverRead = http.createServer((req, res) => {
 
   // .readable: returns bool is stream is still open for read operations
   console.log("is open: ", req.readable);
+  // .readableAborted: returns bool is stream errored out before emitting the end event.
+
+  // .readableDidRead: returns bool if data event was emitted.
+
+  // .readableEncoding: gets the property of the encoding configured with the read stream.
+  // setEncoding: setter function to set stream encoding
+
+  // .readableEnded: returns bool if the stream emits an end event
+
+  // .errored; returns error object passed into reable.destroy(error)
+
+  // .readableFlowing, returns bool if stream is in flow mode.
+
+  // .readableHighWaterMark: return highWaterMark for internal buffer object.
+  //  .readableLength; returns the amount of bytes stored in buffer waaiting to be read
+
+  // readableObjectMode: returns bool if streeam is opertating in object mode.
+
+  // .resume(), swithces the stream back to flow mode if paused, ie:- req.resume(), to continiue reading data from req stream.
+
+  // readdable.wrap(oldReadable): ,wrap() methods is used when devs want to interact with older node streams
+
+  // arraylike methods for stream
+  // readable[Symbol.asyncIterator]()
+  await readAsync(req);
+
+  // readable.map(cb,{options})
+  // map over stream data chunks and perform operations on them
+
+  // readable.find() find a specific chunk pf data
+
+  // .every(cb,{options})
+
+  // .some(cb,{options})
+
+  // .filter(cb,{options})
+
+  // .forEach(cb,{options})
+
+  // .toArray(), turns stream chunks into array
+
   res.end("helloWorld");
 });
 
@@ -372,6 +433,67 @@ serverRead.on("error", (err) => {
   console.log(err.stack);
 });
 
-serverRead.listen(3002, () => {
-  console.log("read running");
+// serverRead.listen(3002, () => {
+//   console.log("read running");
+// });
+
+// map over stream data chunks and perform operations on them
+const { Readable } = require("stream");
+
+// (async () => {
+//   await Readable.from([1, 2, 3, 4, 5]);
+// })();
+
+// //////////////////////////////////////////////////////////////////Duplex streams
+//  duplex streams are streams that implement both the readable and writable streams interface.
+
+// types of duplex streams: zlib, crypto & net
+
+// zlib streams
+const { createGzip } = require("zlib");
+
+const { pipeline } = require("stream");
+
+const { createReadStream, createWriteStream, stat } = require("fs");
+
+const gzip = createGzip();
+
+// duplex methods
+
+// duplex.allowHalfOpen, this option determines if a the write stream should remain open after the read stream ends, if true the write stream will remain open after read ends, conteract this behavior by setting to false
+
+// i.e.
+gzip.allowHalfOpen = true;
+
+// class Transform: these are duplex streams that the output is in one way related to the input. the transform stream is a duplex stream it has both readable and writable streams.
+// transform methods
+// .destroy(): this method is used to destroy a duplex stream. this will destroy both readable and writable streams.
+
+// gzip.destroy(new Error("transform stream destroyed."));
+
+const src = createReadStream("./writable.txt");
+
+const dst = createWriteStream("./write.txt");
+
+// pipeline: the pipeline method is used for duplex streams.
+// it creates a pipeline between the read(src), transform(gzip) and write(dst) api. it creates a pipeine of multiple streams.
+pipeline(src, gzip, dst, (err) => {
+  if (!err) {
+    console.log("compression finished");
+
+    return;
+  }
+
+  console.log(err.name);
+  console.log(err.message);
+  process.exitCode = 1;
+});
+
+// finished method, checks if a stream finished or an error occured while streaming data
+stream.finished(gzip, { error: true }, (err) => {
+  if (!err) {
+    console.log("stream finished");
+    return;
+  }
+  console.log(err.message);
 });
