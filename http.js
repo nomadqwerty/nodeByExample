@@ -257,5 +257,39 @@ const server1 = http
 
 // if client request comes with an http : expect: 100-continue, this means the client expoects a 100 continue response from the server before the client will send any data.
 
-server1.on("checkContinue", (req, res) => {});
-server1.on("checkExpectation", (req, res) => {});
+// the checkContinue event is used to listen for req with http headers of Expect: 100-continue
+server1.on("checkContinue", (req, res) => {
+  console.log("continue");
+  res.writeContinue();
+  res.end("continue");
+});
+// the checkExpectation event is used to listen for req with http headers of Expect which is not 100-continue. ie 101,102,103
+server1.on("checkExpectation", (req, res) => {
+  console.log("expectations met");
+
+  res.end("expectations met");
+});
+
+// methods:
+// closing the server
+server1.on("request", (req, res) => {
+  console.log("incoming request");
+  res.end("incoming request");
+  server1.close(() => {
+    console.log("closing server....");
+  });
+});
+console.log(server1.headersTimeout);
+console.log(server1.listening);
+server1.maxHeadersCount = 2000;
+console.log(server1.maxHeadersCount);
+console.log(server1.requestTimeout);
+server1.on("close", () => {
+  console.log("closed");
+});
+server1.on("error", (err) => {
+  console.log("closed");
+  console.log(err.message);
+});
+
+// serevr.response.
