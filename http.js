@@ -3,6 +3,7 @@ const http = require("http");
 const net = require("net");
 const url = require("url");
 const stream = require("stream");
+const event = require("events");
 
 // node http makes it easy to use some certain protocol featured that are difficult to use.
 // the interface doesnot buffer entire req or es rather it it streamed.
@@ -247,13 +248,13 @@ server.on("error", (error) => {
 ////////////////////////////////////////////////////
 // http.Server
 
-const server1 = http
-  .createServer((req, res) => {
-    res.end();
-  })
-  .listen(3006, () => {
-    console.log("server running....");
-  });
+const server1 = http.createServer((req, res) => {
+  res.end();
+});
+
+// server1.listen(3006, () => {
+//   console.log("server running....");
+// });
 
 // if client request comes with an http : expect: 100-continue, this means the client expoects a 100 continue response from the server before the client will send any data.
 
@@ -292,4 +293,50 @@ server1.on("error", (err) => {
   console.log(err.message);
 });
 
-// serevr.response.
+// serverResponse.
+const servRes = http.createServer((req, res) => {
+  // response object represents out going messages sent from the server to client.
+  // its an instnce of Stream and eventEmitter and http outgoing messages.
+  // instances
+  console.log("here");
+  console.log(res instanceof stream);
+  console.log(res instanceof event.EventEmitter);
+  console.log(res instanceof http.OutgoingMessage);
+
+  // events
+  // close: emitted when res stream is closed
+  res.on("close", () => {
+    console.log("res closed");
+  });
+  // finish: emitted when res stream is finished writing data, will emit before close event
+  res.on("finish", () => {
+    console.log("data has been writen completly");
+  });
+  // methods:
+  // addTrailers: this methods adds headers at the end of the response
+  res.addTrailers({ Cookie: "abtjn343jn22j33" });
+
+  // access underlaying socket
+  // console.log(res.connection);
+
+  // force data into the internal buffer store
+  // res.cork();
+
+  // set key value on header object.
+  res.setHeader("name", "dave");
+
+  // get header by keys
+  console.log(res.getHeader("name"));
+
+  // end req res cycle by ending response
+  res.end("ended", "utf-8", () => {
+    console.log("res done");
+  });
+
+  // return boolean if response is finished
+  console.log(res.finished);
+});
+
+servRes.listen(3000, () => {
+  console.log("servRes.....");
+});
