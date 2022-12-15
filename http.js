@@ -319,11 +319,67 @@ const servRes = http.createServer((req, res) => {
   // access underlaying socket
   // console.log(res.connection);
 
+  // set header names and values in header object
+  // res.setHeader("name", "john");
+  res.setHeader("name", "dave");
+
+  // remove header name from header object, perform before header is sent.
+  res.removeHeader("name");
+
+  // sent http header to client, this method is preferred to be called before res.write() and res.end() and after all changes to header has been made
+  let respnseTxt = "helloWorld";
+  res.writeHead(200, "success", {
+    "Content-Type": "text/plain",
+    "Content-Length": respnseTxt.length,
+  });
+
   // force data into the internal buffer store
-  // res.cork();
+  res.cork();
 
   // set key value on header object.
-  res.setHeader("name", "dave");
+
+  // return a list of header names or keys
+  res.getHeaderNames();
+
+  // return shallowcopy of header object
+  res.getHeaders();
+
+  // return bool, check if header object contains specified key or name
+  res.hasHeader("name");
+
+  // check if header was sent,returns bool
+  res.headersSent;
+
+  // get the original request object, (incomingMesage)
+  res.req;
+
+  // enable authomatic date header property innheader objects. true by default
+  res.sendDate = true;
+
+  // set status code, status code will be sent to client after headers have been flushed from internal buffer
+  res.statusCode = 200;
+
+  // set status message, status message will be sent to client after headers have been flushed from internal buffer
+  res.statusMessage = "success";
+
+  // remove data o forced into buffer by cork()
+  res.uncork();
+
+  // check if the res stream is ended, returns bool
+  res.writableEnded;
+  // check if the res stream is finished writing data, returns bool
+  res.writableFinished;
+
+  // write data to the outGoing (res writeable stream) stream
+  res.write("hello", "utf8", () => {
+    console.log("writing to res stream");
+  });
+
+  // responsed to 100 -expect-continue requests with,
+  res.writeContinue();
+
+  // send processesing messageto the client to indicate that the req body should be sent.
+  res.writeProcessing();
 
   // get header by keys
   console.log(res.getHeader("name"));
@@ -337,6 +393,58 @@ const servRes = http.createServer((req, res) => {
   console.log(res.finished);
 });
 
-servRes.listen(3000, () => {
-  console.log("servRes.....");
+// servRes.listen(3000, () => {
+//   console.log("servRes.....");
+// });
+
+// http incoming message:
+const inCome = http
+  .createServer((req, res) => {
+    res.end("done");
+  })
+  .listen(3000, () => {
+    console.log("running...");
+  });
+
+// events
+inCome.on("request", (req) => {
+  console.log("incoming message...");
+
+  // close event
+  req.on("close", () => {
+    console.log("closed");
+    console.log(req.complete);
+  });
+  // // close event
+  // req.on("close", () => {
+  //   console.log("closed");
+  // });
+
+  // properties:
+  // message.complete is used to check if message has been recieved and parsed: check after close, finished event
+  console.log(req.complete);
+
+  // .headers: access incoming http headers object
+  console.log(req.headers);
+
+  // .headersDistinct: returns http headers as array
+  // console.log(req.headersDistinct);
+
+  // httpVersion: returns the incoming message's http versions
+  console.log(req.httpVersion);
+
+  // message.method: returns the incoming message's http Method
+  console.log(req.method);
+
+  // message.rawHeaders: returns the incoming message headrs as they were sent. retuens a list of key/value pairs.
+  console.log(req.rawHeaders);
+
+  // rawTrailers: returns the trailing http headers sent at the end of the request.
+  console.log(req.rawTrailers);
+  // methods:
+  // destroy(error) used to destroy a stream.
+  // req.destroy(new Error("failed to read"));
+});
+inCome.on("error", (err) => {
+  console.log(err.message);
 });
