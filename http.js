@@ -398,16 +398,15 @@ const servRes = http.createServer((req, res) => {
 // });
 
 // http incoming message:
-const inCome = http
-  .createServer((req, res) => {
-    res.end("done");
-  })
-  .listen(3000, () => {
-    console.log("running...");
-  });
+const inCome = http.createServer((req, res) => {
+  res.end("done");
+});
+// .listen(3000, () => {
+//   console.log("running...");
+// });
 
 // events
-inCome.on("request", (req) => {
+inCome.on("request", (req, res) => {
   console.log("incoming message...");
 
   // close event
@@ -440,7 +439,22 @@ inCome.on("request", (req) => {
   console.log(req.rawHeaders);
 
   // rawTrailers: returns the trailing http headers sent at the end of the request.
+
   console.log(req.rawTrailers);
+  // get incoming message trailers, recieved at the end of the request or respnse
+  req.trailers;
+
+  // message.statusCode: holds the property of the response status code, set or get
+  res.statusCode = 200;
+
+  // message.statusessage: holds the property of the response status Message, set or get
+  res.statusMessage = "success";
+
+  // get the request url string
+  let url = req.url;
+
+  console.log(url);
+
   // methods:
   // destroy(error) used to destroy a stream.
   // req.destroy(new Error("failed to read"));
@@ -448,3 +462,19 @@ inCome.on("request", (req) => {
 inCome.on("error", (err) => {
   console.log(err.message);
 });
+
+// client Interface: out going requests
+let reqOpts = {
+  port: 1000,
+  host: "127.0.0.1",
+  // method: "GET",
+  // path: "127.0.0.1:3000",
+};
+
+// const req = http.ClientRequest();
+
+// // req.end();
+
+// req.on("error", (err) => {
+//   console.log(err.message);
+// });
